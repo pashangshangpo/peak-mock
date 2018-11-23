@@ -33,7 +33,7 @@ const MockData = (router, mock) => {
 
   for (let item of mock) {
     router[item.type](item.path, cxt => {
-      cxt.body = item.data()
+      cxt.body = item.data(cxt)
     })
   }
 }
