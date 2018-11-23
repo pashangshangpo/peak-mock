@@ -4,6 +4,8 @@
  * @date 2018-11-23 22:58:24
  */
 
+const Fs = require('fs')
+const Path = require('path')
 const Koa = require('koa')
 const Router = require('koa-router')
 
@@ -38,6 +40,37 @@ const MockData = (router, mock) => {
   }
 }
 
+const RequireContext = path => {
+  let result = []
+  let files = Fs.readdirSync(path)
+
+  for (let fileName of files) {
+    let ext = Path.extname(fileName)
+
+    if (ext) {
+      result.push(`${path}/${fileName}`)
+    }
+    else {
+      result = result.concat(RequireAll(`${path}/${fileName}`))
+    }
+  }
+
+  return result
+}
+
+const GetMockData = mockPath => {
+  let mockData = {}
+
+  RequireContext(mockPath).map(path => {
+    mockData = {
+      ...mockData,
+      ...require(path)
+    }
+  })
+
+  return mockData
+}
+
 module.exports = (app, mock = {}, port = 3000) => {
   const App = app || new Koa()
   const router = new Router()
@@ -46,3 +79,5 @@ module.exports = (app, mock = {}, port = 3000) => {
 
   App.use(router.routes()).listen(port)
 }
+
+module.exports.GetMockData = GetMockData
