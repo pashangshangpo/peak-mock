@@ -28,10 +28,7 @@ const ParseMock = mock => {
   return Result
 }
 
-module.exports = (app, mock = {}, port = 3000) => {
-  const App = app || new Koa()
-  const router = new Router()
-
+const MockData = (router, mock) => {
   mock = ParseMock(mock)
 
   for (let item of mock) {
@@ -39,6 +36,13 @@ module.exports = (app, mock = {}, port = 3000) => {
       cxt.body = item.data()
     })
   }
+}
+
+module.exports = (app, mock = {}, port = 3000) => {
+  const App = app || new Koa()
+  const router = new Router()
+
+  MockData(router, mock)
 
   App.use(router.routes()).listen(port)
 }
