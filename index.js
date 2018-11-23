@@ -34,8 +34,14 @@ const MockData = (router, mock) => {
   mock = ParseMock(mock)
 
   for (let item of mock) {
-    router[item.type](item.path, cxt => {
-      cxt.body = item.data(cxt)
+    router[item.type](item.path, async cxt => {
+      let data = item.data(cxt)
+
+      if (data.then) {
+        data = await data
+      }
+
+      cxt.body = data
     })
   }
 }
