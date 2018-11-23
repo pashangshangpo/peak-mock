@@ -8,5 +8,6 @@ const Koa = require('koa')
 const Router = require('koa-router')
 
 const App = new Koa()
+const router = new Router()
 
-App.use((new Router()).routes)
+App.use(router.routes()).listen(3000)
