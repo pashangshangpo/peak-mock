@@ -20,7 +20,8 @@ const ParseMock = mock => {
 
     Result.push({
       type: type.toLowerCase(),
-      path: path
+      path: path,
+      data: mock[key]
     })
   }
 
@@ -31,7 +32,13 @@ module.exports = (app, mock = {}, port = 3000) => {
   const App = app || new Koa()
   const router = new Router()
 
-  console.log(ParseMock(mock))
+  mock = ParseMock(mock)
+
+  for (let item of mock) {
+    router[item.type](item.path, cxt => {
+      cxt.body = item.data()
+    })
+  }
 
   App.use(router.routes()).listen(port)
 }
