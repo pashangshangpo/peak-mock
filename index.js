@@ -7,7 +7,9 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 
-const App = new Koa()
-const router = new Router()
+module.exports = (app, mock, port = 3000) => {
+  const App = app || new Koa()
+  const router = new Router()
 
-App.use(router.routes()).listen(3000)
+  App.use(router.routes()).listen()
+}
