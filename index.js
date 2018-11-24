@@ -9,6 +9,7 @@ const Path = require('path')
 const Koa = require('koa')
 const Router = require('koa-router')
 const Cors = require('koa2-cors')
+const Proxy = require('koa-server-http-proxy')
 
 const ParseMock = mock => {
   const Result = []
@@ -35,7 +36,7 @@ const MockData = (router, mock) => {
   mock = ParseMock(mock)
 
   for (let item of mock) {
-    router[item.type](item.path, async cxt => {
+    router[item.type](item.path, async (cxt, next) => {
       let data = item.data
       
       if (typeof data !== 'string') {
@@ -52,10 +53,17 @@ const MockData = (router, mock) => {
       }
 
       if (typeof data === 'string') {
-        
+        Proxy(cxt.req.url, {
+          target: data,
+          changeOrigin: true,
+          onProxyRes: (proxyRes, req, res) => {
+            proxyRes.statusCode = 200
+          }
+        })(cxt, next)
       }
-
-      cxt.body = data
+      else {
+        cxt.body = data
+      }
     })
   }
 }
