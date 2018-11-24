@@ -41,6 +41,11 @@ const MockData = (router, mock) => {
         data = await data
       }
 
+      if (typeof data === object) {
+        // 方便知道这是本地返回的数据还是服务端返回的数据
+        data._local_mock = true
+      }
+
       cxt.body = data
     })
   }
