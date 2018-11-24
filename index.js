@@ -8,6 +8,7 @@ const Fs = require('fs')
 const Path = require('path')
 const Koa = require('koa')
 const Router = require('koa-router')
+const Cors = require('koa2-cors')
 
 const ParseMock = mock => {
   const Result = []
@@ -96,6 +97,7 @@ module.exports = (app, mock = {}, port = 3000) => {
 
   MockData(router, mock)
 
+  App.use(Cors())
   App.use(router.routes()).listen(port)
 }
 
