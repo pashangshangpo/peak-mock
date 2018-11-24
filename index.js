@@ -35,15 +35,23 @@ const MockData = (router, mock) => {
 
   for (let item of mock) {
     router[item.type](item.path, async cxt => {
-      let data = item.data(cxt)
+      let data = item.data
+      
+      if (typeof data !== 'string') {
+        let data = data(cxt)
 
-      if (data.then) {
-        data = await data
+        if (data.then) {
+          data = await data
+        }
+
+        if (typeof data === object) {
+          // 方便知道这是本地返回的数据还是服务端返回的数据
+          data._local_mock = true
+        }
       }
 
-      if (typeof data === object) {
-        // 方便知道这是本地返回的数据还是服务端返回的数据
-        data._local_mock = true
+      if (typeof data === 'string') {
+        
       }
 
       cxt.body = data
