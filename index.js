@@ -39,7 +39,7 @@ const MockData = (router, mock) => {
     router[item.type](item.path, async (cxt, next) => {
       let data = item.data
       
-      if (typeof data !== 'string') {
+      if (typeof data === 'function') {
         data = data(cxt)
 
         if (data.then) {
