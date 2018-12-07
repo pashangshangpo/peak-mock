@@ -106,7 +106,9 @@ module.exports = (app, mock = {}, port = 3000) => {
   MockData(router, mock)
 
   App.use(Cors())
-  App.use(router.routes()).listen(port)
+  App.use(router.routes()).listen(port, () => {
+    console.log(`mock: http://localhost:${port}`)
+  })
 }
 
 module.exports.GetMockData = GetMockData
