@@ -92,7 +92,7 @@ const GetMockData = mockPath => {
   RequireContext(mockPath).map(path => {
     mockData = {
       ...mockData,
-      ...require(path)
+      ...require(Path.resolve('.', path))
     }
   })
 
