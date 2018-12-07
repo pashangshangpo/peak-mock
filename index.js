@@ -79,7 +79,7 @@ const RequireContext = path => {
       result.push(`${path}/${fileName}`)
     }
     else {
-      result = result.concat(RequireAll(`${path}/${fileName}`))
+      result = result.concat(RequireContext(`${path}/${fileName}`))
     }
   }
 
