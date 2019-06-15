@@ -6,11 +6,19 @@ mock 服务
 
 ```
 const Mock = require('peak-mock')
+const Fs = require('fs')
+const Path = require('path')
 
 Mock(
-  null, // 默认 new Koa()
-  Mock.GetMockData('./mock'), // mock的数据
-  3001
+  {
+    app: null,
+    mock: Mock.GetMockData('./mock'), // mock的数据
+    ssl: {
+      key: Fs.readFileSync(Path.resolve('./ssl/key.pem')),
+      cert: Fs.readFileSync(Path.resolve('./ssl/cert.pem')),
+    },
+    port: 3001,
+  }
 )
 ```
 

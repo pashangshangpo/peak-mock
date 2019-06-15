@@ -6,6 +6,8 @@
 
 const Fs = require('fs')
 const Path = require('path')
+const Http = require('http')
+const Https = require('https')
 const Koa = require('koa')
 const Router = require('koa-router')
 const Cors = require('koa2-cors')
@@ -99,16 +101,24 @@ const GetMockData = mockPath => {
   return mockData
 }
 
-module.exports = (app, mock = {}, port = 3000) => {
+module.exports = ({ app, mock = {}, port = 3000, ssl }) => {
   const App = app || new Koa()
   const router = new Router()
 
   MockData(router, mock)
 
   App.use(Cors())
-  App.use(router.routes()).listen(port, () => {
-    console.log(`mock: http://localhost:${port}`)
+  App.use(router.routes())
+
+  Http.createServer(App.callback()).listen(port, () => {
+    console.log(`http://localhost:${port}`);
   })
+
+  if (ssl) {
+    Https.createServer(ssl, App.callback()).listen(port + 1, () => {
+      console.log(`https://localhost:${port + 1}`);
+    });
+  }
 }
 
 module.exports.GetMockData = GetMockData
